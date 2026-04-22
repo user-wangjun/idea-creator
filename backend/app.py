@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
 import requests
 import pandas as pd
 import markdown
@@ -8,6 +9,7 @@ import time
 from config import GLM_API_KEY, GLM_API_URL, GLM_MODEL, DEBUG, PORT
 
 app = Flask(__name__)
+CORS(app)  # 启用CORS
 
 # 生成项目方案的函数
 def generate_project_plan(keyword):
