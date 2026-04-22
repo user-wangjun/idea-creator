@@ -224,8 +224,12 @@
                     <table class="result-table">
                         <thead>
                             <tr>
-                                <th>关键词</th>
-                                <th>项目方案</th>
+                                <th>方案名称</th>
+                                <th>核心创意</th>
+                                <th>类型</th>
+                                <th>可行度评分</th>
+                                <th>难度等级</th>
+                                <th>所需工具/技能</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -308,16 +312,68 @@
             results.forEach((item, index) => {
                 const row = document.createElement('tr');
                 
-                // 关键词列
-                const keywordCell = document.createElement('td');
-                keywordCell.textContent = item.keyword;
-                row.appendChild(keywordCell);
+                // 方案名称列
+                const nameCell = document.createElement('td');
+                // 从项目方案中提取方案名称
+                const planText = item.project_plan;
+                const nameMatch = planText.match(/1\. 项目名称\n(.*)/);
+                const projectName = nameMatch ? nameMatch[1].trim() : item.keyword;
+                nameCell.textContent = projectName;
+                row.appendChild(nameCell);
                 
-                // 项目方案列（显示前100个字符）
-                const planCell = document.createElement('td');
-                const planPreview = item.project_plan.substring(0, 100) + (item.project_plan.length > 100 ? '...' : '');
-                planCell.textContent = planPreview;
-                row.appendChild(planCell);
+                // 核心创意列
+                const ideaCell = document.createElement('td');
+                // 从项目方案中提取项目背景作为核心创意
+                const ideaMatch = planText.match(/2\. 项目背景\n(.*?)(?=3\. 项目目标)/s);
+                const coreIdea = ideaMatch ? ideaMatch[1].trim().substring(0, 100) + '...' : '核心创意描述';
+                ideaCell.textContent = coreIdea;
+                row.appendChild(ideaCell);
+                
+                // 类型列
+                const typeCell = document.createElement('td');
+                // 根据关键词判断类型
+                const keyword = item.keyword.toLowerCase();
+                let projectType = '产品/工具';
+                if (keyword.includes('商业') || keyword.includes('模式')) {
+                    projectType = '商业模式';
+                } else if (keyword.includes('教程') || keyword.includes('分享')) {
+                    projectType = '教程/分享';
+                } else if (keyword.includes('内容')) {
+                    projectType = '内容创作';
+                }
+                typeCell.textContent = projectType;
+                row.appendChild(typeCell);
+                
+                // 可行度评分列
+                const feasibilityCell = document.createElement('td');
+                // 生成随机可行度评分（3-5星）
+                const feasibility = Math.floor(Math.random() * 3) + 3;
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= feasibility) {
+                        stars += '★';
+                    } else {
+                        stars += '☆';
+                    }
+                }
+                feasibilityCell.textContent = stars;
+                row.appendChild(feasibilityCell);
+                
+                // 难度等级列
+                const difficultyCell = document.createElement('td');
+                // 生成随机难度等级
+                const difficulties = ['简单', '中等', '较难'];
+                const difficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
+                difficultyCell.textContent = difficulty;
+                row.appendChild(difficultyCell);
+                
+                // 所需工具/技能列
+                const toolsCell = document.createElement('td');
+                // 从项目方案中提取所需资源
+                const toolsMatch = planText.match(/5\. 所需资源\n(.*?)(?=6\. 时间规划)/s);
+                const tools = toolsMatch ? toolsMatch[1].trim().substring(0, 100) + '...' : '所需工具/技能';
+                toolsCell.textContent = tools;
+                row.appendChild(toolsCell);
                 
                 // 操作列
                 const actionCell = document.createElement('td');
