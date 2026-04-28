@@ -1,6 +1,8 @@
 import { loadApiKey } from '../utils/storage'
 
+const DEFAULT_API_KEY = '33901d235d1341bc85f4d8c3ea338848.EpUZsbPOj48ZQRv2'
 const GLM_API_URL = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
+const MODEL_NAME = 'glm-4-flash'
 
 const generatePrompt = (userInput) => `
 你是一个专业的项目创意顾问和技术架构师。请根据用户的提示词，从多个角度发散思维，生成5个可落地的项目方案。
@@ -26,11 +28,7 @@ const generatePrompt = (userInput) => `
 `
 
 export const callGLM = async (prompt) => {
-  const apiKey = loadApiKey()
-  
-  if (!apiKey) {
-    throw new Error('请先配置API Key')
-  }
+  const apiKey = loadApiKey() || DEFAULT_API_KEY
 
   const headers = {
     'Content-Type': 'application/json',
@@ -38,7 +36,7 @@ export const callGLM = async (prompt) => {
   }
 
   const body = JSON.stringify({
-    model: 'glm-4-flash',
+    model: MODEL_NAME,
     messages: [
       {
         role: 'system',
@@ -90,7 +88,7 @@ export const validateApiKey = async (apiKey) => {
   }
 
   const body = JSON.stringify({
-    model: 'glm-4-flash',
+    model: MODEL_NAME,
     messages: [
       {
         role: 'user',

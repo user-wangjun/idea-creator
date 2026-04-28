@@ -16,14 +16,14 @@ function App() {
   const [error, setError] = useState(null)
   const [selectedIdea, setSelectedIdea] = useState(null)
   const [showApiKeyModal, setShowApiKeyModal] = useState(false)
-  const [hasApiKey, setHasApiKey] = useState(false)
+  const [hasApiKey, setHasApiKey] = useState(true)
 
   useEffect(() => {
     const sessionsList = getSessions()
     const current = getCurrentSession()
     setSessions(sessionsList)
     setCurrentSessionState(current)
-    setHasApiKey(!!loadApiKey())
+    setHasApiKey(true)
 
     if (current.messages.length > 0) {
       const lastMessage = current.messages[current.messages.length - 1]
@@ -82,11 +82,6 @@ function App() {
   }
 
   const handleGenerate = async (prompt) => {
-    if (!hasApiKey) {
-      setShowApiKeyModal(true)
-      return
-    }
-
     setIsLoading(true)
     setError(null)
 
@@ -140,16 +135,12 @@ function App() {
           </div>
           <button
             onClick={() => setShowApiKeyModal(true)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors ${
-              hasApiKey
-                ? 'bg-green-500/20 text-green-400'
-                : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
-            }`}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors bg-slate-700 text-slate-400 hover:bg-slate-600"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            {hasApiKey ? 'API Key已配置' : '配置API Key'}
+            {loadApiKey() ? '自定义密钥' : '使用默认密钥'}
           </button>
         </div>
 

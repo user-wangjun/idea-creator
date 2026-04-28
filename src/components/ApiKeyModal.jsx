@@ -56,13 +56,19 @@ function ApiKeyModal({ isOpen, onClose, onValidated }) {
         </div>
 
         <div className="p-6">
+          <div className="mb-4 p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-xl">
+            <p className="text-sm text-cyan-400">
+              应用已内置默认API密钥，可直接使用。如需使用自己的密钥，请在下方输入。
+            </p>
+          </div>
+
           <div className="mb-4">
-            <label className="block text-sm font-medium text-slate-400 mb-2">GLM API Key</label>
+            <label className="block text-sm font-medium text-slate-400 mb-2">自定义 GLM API Key（可选）</label>
             <input
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx"
+              placeholder="输入你自己的API Key"
               className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all font-mono text-sm"
             />
           </div>
@@ -109,7 +115,7 @@ function ApiKeyModal({ isOpen, onClose, onValidated }) {
           </div>
 
           <p className="mt-4 text-xs text-slate-500 text-center">
-            API Key将加密保存在浏览器本地存储中
+            自定义密钥将加密保存在浏览器本地存储中，优先使用自定义密钥
           </p>
         </div>
       </div>
