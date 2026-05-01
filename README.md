@@ -17,7 +17,7 @@
 - ✅ 字数统计
 
 ### AI项目方案生成
-- ✅ 集成GLM-4-Flash API
+- ✅ 集成GLM-4.7-Flash API
 - ✅ 生成5个不同维度的项目方案
 - ✅ 每个方案包含：
   - 方案名称
@@ -45,7 +45,7 @@
 - **前端框架：** React 18
 - **构建工具：** Vite 5
 - **样式方案：** Tailwind CSS 3
-- **AI服务：** GLM-4-Flash API
+- **AI服务：** GLM-4.7-Flash API
 - **本地存储：** localStorage
 
 ## 快速开始
