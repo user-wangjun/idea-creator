@@ -17,6 +17,7 @@ function App() {
   const [selectedIdea, setSelectedIdea] = useState(null)
   const [showApiKeyModal, setShowApiKeyModal] = useState(false)
   const [hasApiKey, setHasApiKey] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     const sessionsList = getSessions()
@@ -54,6 +55,7 @@ function App() {
       }
     }
     setError(null)
+    setSidebarOpen(false)
   }
 
   const handleCreateSession = () => {
@@ -117,34 +119,59 @@ function App() {
 
   return (
     <div className="h-screen flex bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <Sidebar
-        sessions={sessions}
-        currentSessionId={currentSession?.id}
-        onSelectSession={handleSelectSession}
-        onCreateSession={handleCreateSession}
-        onDeleteSession={handleDeleteSession}
-      />
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`fixed lg:relative z-50 h-full transition-transform duration-300 ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      }`}>
+        <Sidebar
+          sessions={sessions}
+          currentSessionId={currentSession?.id}
+          onSelectSession={handleSelectSession}
+          onCreateSession={handleCreateSession}
+          onDeleteSession={handleDeleteSession}
+          onClose={() => setSidebarOpen(false)}
+        />
+      </div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700/50">
-          <div>
-            <h2 className="text-lg font-semibold text-white">{currentSession?.title || '新会话'}</h2>
-            <p className="text-xs text-slate-500">
-              {currentSession?.messages.length || 0} 条消息
-            </p>
+        {/* Header with mobile menu button */}
+        <div className="flex items-center justify-between px-4 lg:px-6 py-4 border-b border-slate-700/50">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <div>
+              <h2 className="text-lg font-semibold text-white">{currentSession?.title || '新会话'}</h2>
+              <p className="text-xs text-slate-500">
+                {currentSession?.messages.length || 0} 条消息
+              </p>
+            </div>
           </div>
           <button
             onClick={() => setShowApiKeyModal(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors bg-slate-700 text-slate-400 hover:bg-slate-600"
+            className="flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg text-sm transition-colors bg-slate-700 text-slate-400 hover:bg-slate-600"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            {loadApiKey() ? '自定义密钥' : '使用默认密钥'}
+            <span className="hidden sm:inline">{loadApiKey() ? '自定义密钥' : '使用默认密钥'}</span>
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4 lg:space-y-6">
           <InputPanel onGenerate={handleGenerate} isLoading={isLoading} />
 
           {error && (
@@ -158,9 +185,9 @@ function App() {
           )}
 
           {!isLoading && !error && ideas.length === 0 && currentSession?.messages.length > 0 && (
-            <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-700 flex items-center justify-center">
-                <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 lg:p-8 text-center">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 mx-auto mb-4 rounded-full bg-slate-700 flex items-center justify-center">
+                <svg className="w-6 h-6 lg:w-8 lg:h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>

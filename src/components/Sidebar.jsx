@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { formatDate } from '../utils/storage'
 import { updateSessionTitle } from '../utils/sessionManager'
 
-function Sidebar({ sessions, currentSessionId, onSelectSession, onCreateSession, onDeleteSession }) {
+function Sidebar({ sessions, currentSessionId, onSelectSession, onCreateSession, onDeleteSession, onClose }) {
   const [editingId, setEditingId] = useState(null)
   const [editTitle, setEditTitle] = useState('')
 
@@ -25,18 +25,30 @@ function Sidebar({ sessions, currentSessionId, onSelectSession, onCreateSession,
   }
 
   return (
-    <div className="w-64 bg-slate-900/80 backdrop-blur-xl border-r border-slate-700/50 flex flex-col h-full">
+    <div className="w-72 lg:w-64 bg-slate-900/80 backdrop-blur-xl border-r border-slate-700/50 flex flex-col h-full">
       <div className="p-4 border-b border-slate-700/50">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/25">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">灵感放大器</h1>
+              <p className="text-xs text-slate-400">发散思维 · 创造无限</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">灵感放大器</h1>
-            <p className="text-xs text-slate-400">发散思维 · 创造无限</p>
-          </div>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="lg:hidden p-2 rounded-lg text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
