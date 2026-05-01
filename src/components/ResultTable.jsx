@@ -1,3 +1,4 @@
+
 function ResultTable({ ideas, onSelectIdea }) {
   const getScoreColor = (score) => {
     if (score >= 80) return 'text-green-400 bg-green-500/20'
@@ -106,19 +107,19 @@ function ResultTable({ ideas, onSelectIdea }) {
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/30 to-blue-500/30 flex items-center justify-center text-cyan-400 font-medium text-sm">
-                      {index + 1}
-                    </div>
-                    <span className="text-white font-medium">{idea.name}</span>
+                  {index + 1}
+                </div>
+                <span className="text-white font-medium">{idea.name}</span>
               </div>
               <button
-                    className="px-3 py-1.5 bg-cyan-500/20 text-cyan-400 rounded-lg text-xs font-medium hover:bg-cyan-500/30 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onSelectIdea(idea)
-                    }}
-                  >
-                    查看详情
-                  </button>
+                className="px-3 py-1.5 bg-cyan-500/20 text-cyan-400 rounded-lg text-xs font-medium hover:bg-cyan-500/30 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onSelectIdea(idea)
+                }}
+              >
+                查看详情
+              </button>
             </div>
             <p className="text-slate-400 text-sm mb-4 line-clamp-2">{idea.description}</p>
             <div className="grid grid-cols-2 gap-4">
@@ -126,8 +127,8 @@ function ResultTable({ ideas, onSelectIdea }) {
                 <p className="text-xs text-slate-500">创新性</p>
                 <div className="flex items-center gap-2">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getScoreColor(idea.innovation)}`}>
-                      {idea.innovation}分
-                    </span>
+                    {idea.innovation}分
+                  </span>
                   <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${getScoreBg(idea.innovation)}`}
@@ -140,8 +141,8 @@ function ResultTable({ ideas, onSelectIdea }) {
                 <p className="text-xs text-slate-500">可行性</p>
                 <div className="flex items-center gap-2">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getScoreColor(idea.feasibility)}`}>
-                      {idea.feasibility}分
-                    </span>
+                    {idea.feasibility}分
+                  </span>
                   <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${getScoreBg(idea.feasibility)}`}
@@ -159,3 +160,4 @@ function ResultTable({ ideas, onSelectIdea }) {
 }
 
 export default ResultTable
+
