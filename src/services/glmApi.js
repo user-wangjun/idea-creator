@@ -1,3 +1,4 @@
+
 import { loadApiKey } from '../utils/storage'
 
 const DEFAULT_API_KEY = '33901d235d1341bc85f4d8c3ea338848.EpUZsbPOj48ZQRv2'
@@ -30,13 +31,15 @@ const generatePrompt = (userInput) => `
 export const callGLM = async (prompt) => {
   const apiKey = loadApiKey() || DEFAULT_API_KEY
   console.log('使用API Key:', apiKey ? '已配置' : '使用默认')
+  console.log('API URL:', GLM_API_URL)
+  console.log('模型名称:', MODEL_NAME)
 
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${apiKey}`
   }
 
-  const body = JSON.stringify({
+  const requestBody = {
     model: MODEL_NAME,
     messages: [
       {
@@ -50,24 +53,31 @@ export const callGLM = async (prompt) => {
     ],
     temperature: 0.7,
     max_tokens: 4000
-  })
+  }
 
-  console.log('正在调用GLM API...', MODEL_NAME)
+  console.log('发送请求...')
+  console.log('请求体:', JSON.stringify(requestBody, null, 2))
 
   try {
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 60000) // 60秒超时
+    const timeoutId = setTimeout(() => {
+      console.error('请求超时!')
+      controller.abort()
+    }, 120000)
+
+    console.log('等待API响应...')
 
     const response = await fetch(GLM_API_URL, {
       method: 'POST',
       headers: headers,
-      body: body,
+      body: JSON.stringify(requestBody),
       signal: controller.signal
     })
 
     clearTimeout(timeoutId)
+    console.log('收到响应')
 
-    console.log('API响应状态:', response.status)
+    console.log('HTTP状态码:', response.status)
 
     if (!response.ok) {
       const errorText = await response.text()
@@ -75,9 +85,9 @@ export const callGLM = async (prompt) => {
       let errorMessage
       try {
         const errorData = JSON.parse(errorText)
-        errorMessage = errorData?.error?.message || `HTTP error! status: ${response.status}`
+        errorMessage = errorData?.error?.message || `HTTP错误! 状态码: ${response.status}`
       } catch {
-        errorMessage = `HTTP error! status: ${response.status} - ${errorText}`
+        errorMessage = `HTTP错误! 状态码: ${response.status} - ${errorText}`
       }
       throw new Error(errorMessage)
     }
@@ -88,18 +98,24 @@ export const callGLM = async (prompt) => {
     const content = data.choices?.[0]?.message?.content
     
     if (!content) {
+      console.error('响应内容为空')
       throw new Error('API返回数据格式错误')
     }
 
+    console.log('生成内容长度:', content.length, '字符')
+
     try {
-      return JSON.parse(content)
+      const parsed = JSON.parse(content)
+      console.log('JSON解析成功，生成了', Array.isArray(parsed) ? parsed.length : 0, '个方案')
+      return parsed
     } catch (parseError) {
-      console.error('JSON解析失败，原始内容:', content)
+      console.error('JSON解析失败，原始内容:', content.substring(0, 500))
       throw new Error('返回数据格式解析失败')
     }
   } catch (error) {
     if (error.name === 'AbortError') {
-      throw new Error('请求超时，请重试')
+      console.error('请求被中止(可能是超时)')
+      throw new Error('请求超时，请检查网络连接或API配置')
     }
     console.error('GLM API调用失败:', error)
     throw error
@@ -125,7 +141,7 @@ export const validateApiKey = async (apiKey) => {
 
   try {
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 10000) // 10秒超时
+    const timeoutId = setTimeout(() => controller.abort(), 10000)
 
     const response = await fetch(GLM_API_URL, {
       method: 'POST',
@@ -141,3 +157,4 @@ export const validateApiKey = async (apiKey) => {
     return false
   }
 }
+
